@@ -3,90 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>GOYA</title>
-  <link rel="shortcut icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css" media="all">
+  <script src="load.js"></script>
 </head>
 <body>
-  <canvas id="canvas" class="invis"></canvas>
-  <div id="hud">
-    <p id="fps">0</p>
-  </div>
-  <script type="text/javascript">
+  <canvas id="canvas" class="loading"></canvas>
+  <script>
 
-var load = function (libs, callbacks) {
-    "use strict";
+(function (global) {
+  "use strict";
+  var resources = {
+    script: ["libraries/keymaster.js", "libraries/mouse.js", "goya.js"],
+    img: ["loaded.png", "loading.png"]
+  };
 
-    var loaded = 0,
-      length = 0,
-      libraries = {},
-      isload = function () {
-        loaded += 1;
-        if (loaded === length) {
-          try {
-            return callbacks.success(libraries);
-          } catch(e) {
-            callbacks.failure(e);
-          }
-        }
-      },
-      i,
-      v,
-      element;
-
-    for (i in libs) {
-      if (libs.hasOwnProperty(i)) {
-        libraries[i] = [];
-        for (v = 0; v < libs[i].length; v += 1) {
-          length += 1;
-          element = document.createElement(i);
-          element.onload = isload;
-          element.onabort = callbacks.failure;
-          element.onerror = callbacks.failure;
-          element.src = libs[i][v];
-          if (i === "script") {
-            document.head.insertBefore(element, document.head.firstChild);
-          }
-          libraries[i].push(element);
-        }
-      }
+  Load(resources, {
+    success: function (resources) {
+      global.console.log("Woah: " + resources);
     }
-  },
-  // salt stops the browser from loading cached scrips
-  salt = "?" + (new Date()).getTime(),
-  pooped = function (error) {
-    var errorMessage = document.createElement("p");
-    errorMessage.innerText = "error error!! send this to someone: " + error.message;
-    hud.className = "error";
-    hud.appendChild(errorMessage);
-  },
-  hud = document.getElementById("hud"),
-  requestAnimationFrame = window.requestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.webkitRequestAnimationFrame;
+  });
+}(this));
 
-load({
-  img: ["loading.png"]
-}, {
-  success: function (res) {
-    "use strict";
-
-    document.getElementById("hud").classList.add("loading");
-
-    load({
-      script: ["libraries/hex-rgb.js", "libraries/keymaster.js", "libraries/mouse.js", "libraries/stats.js", "goya.js" + salt],
-      img: ["loaded.png"]
-    }, {
-      success: function (res) {
-        //level loading probably goes here
-        Goya.init();
-      },
-      failure: pooped
-    });
-  },
-  failure: pooped
-});
-</script>
-
+  </script>
 </body>
 </html>
