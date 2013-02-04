@@ -12,7 +12,7 @@
     },
     parseResources = function (resources) {
       var parsed = {},
-        name, res, currentRes;
+        name, res;
 
       for (name in resources) {
         if (resources.hasOwnProperty(name)) {
@@ -23,7 +23,6 @@
               loadedElements[resources[name][res]] = parsed[name][res];
             } else {
               parsed[name][res] = loadedElements[resources[name][res]];
-              global.console.log(loadedElements[resources[name][res]]);
             }
             toLoad += 1;
           }
@@ -37,7 +36,6 @@
       element.onload = loaded;
       element.onerror = currentCallbacks.failure;
       global.document.head.appendChild(element);
-      global.console.log(element);
       return element;
     },
     loaded = function () {
