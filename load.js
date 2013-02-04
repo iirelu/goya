@@ -12,25 +12,26 @@
     },
     parseResources = function (resources) {
       var parsed = {},
-        name, res;
+        i, name;
 
-      for (name in resources) {
-        if (resources.hasOwnProperty(name)) {
-          parsed[name] = [];
-          for (res = 0; res < resources[name].length; res += 1) {
-            if (!loadedElements[resources[name][res]]) {
-              parsed[name][res] = createElement(name, resources[name][res]);
-              loadedElements[resources[name][res]] = parsed[name][res];
-            } else {
-              parsed[name][res] = loadedElements[resources[name][res]];
-            }
-            toLoad += 1;
-          }
+      for (i = 0; i < resources.length; i++) {
+        name = resources[i].match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[1];
+        if (name in extensions) {
+          name = extensions[name.toLowerCase()];
+        } else {
+          throw new Error("Unrecognised filetype: " + name);
         }
+        
+
+        toLoad += 1;
+        parsed[resources[i]] = createElement(name, resources[i]);
       }
       return parsed;
     },
     createElement = function (name, src) {
+      if (loadedElements[src]) {
+        return loadedElements[src];
+      }
       var element = global.document.createElement(name);
       element.src = src;
       element.onload = loaded;
@@ -48,7 +49,8 @@
     currentElements,
     toLoad,
     currentLoaded,
-    currentCallbacks;
+    currentCallbacks,
+    extensions = {"js": "script", "png": "img", "jpg": "img", "jpeg": "img"};
 
   global.Load = Load;
 }(this));
