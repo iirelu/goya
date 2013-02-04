@@ -12,14 +12,15 @@
 
 (function (global) {
   "use strict";
-  var resources = {
-    script: ["libraries/keymaster.js", "libraries/mouse.js", "goya.js"],
-    img: ["loaded.png", "loading.png"]
-  };
+  var
+    resources = {
+      script: ["libraries/keymaster.js", "libraries/mouse.js", "goya.js"],
+      img: ["loaded.png", "loading.png"]
+    };
 
   Load(resources, {
     success: function (resources) {
-      global.console.log("Woah: " + resources);
+      Goya.init()
     }
   });
 }(this));

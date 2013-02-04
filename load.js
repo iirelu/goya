@@ -2,7 +2,6 @@
   "use strict";
   var
     Load = function (resources, callback) {
-      debugger;
       if (arguments.length === 0) {
         throw new Error("Not enough arguments to Load()");
       }
@@ -19,11 +18,12 @@
         if (resources.hasOwnProperty(name)) {
           parsed[name] = [];
           for (res = 0; res < resources[name].length; res += 1) {
-            if (!loadedElements[res]) {
+            if (!loadedElements[resources[name][res]]) {
               parsed[name][res] = createElement(name, resources[name][res]);
-              loadedElements[res] = parsed[name][res];
+              loadedElements[resources[name][res]] = parsed[name][res];
             } else {
-              parsed[name][res] = loadedElements[res];
+              parsed[name][res] = loadedElements[resources[name][res]];
+              global.console.log(loadedElements[resources[name][res]]);
             }
             toLoad += 1;
           }
@@ -34,8 +34,10 @@
     createElement = function (name, src) {
       var element = global.document.createElement(name);
       element.src = src;
-      element.addEventListener("load", loaded, false);
-      element.addEventListener("error", currentCallbacks.failed, false);
+      element.onload = loaded;
+      element.onerror = currentCallbacks.failure;
+      global.document.head.appendChild(element);
+      global.console.log(element);
       return element;
     },
     loaded = function () {

@@ -5,7 +5,7 @@
     var canvas = global.document.getElementById("canvas"),
       ctx = canvas.getContext("2d"),
       hud = global.document.getElementById("hud"),
-      fps = global.document.getElementById("fps"),
+      fps = global.document.body.appendChild(global.document.createElement("p")),
       W,
       H,
       gradient,
@@ -57,8 +57,7 @@
     return {
       init: function () {
 
-        hud.classList.remove("loading");
-        canvas.classList.remove("invis");
+        canvas.classList.remove("loading");
 
         resize();
         global.addEventListener("resize", resize, false);
