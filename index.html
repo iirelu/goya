@@ -13,13 +13,24 @@
 (function (global) {
   "use strict";
   var
-    resources = ["libraries/keymaster.js", "libraries/mouse.js", "goya.js", "loaded.png", "loading.png"];
-
-  Load(resources, {
-    success: function (resources) {
-      Goya.init()
+    resources = ["libraries/keymaster.js", "libraries/mouse.js", "goya.js", "loaded.png", "loading.png"],
+    failure = function (e) {
+      var error = global.document.createElement("span");
+      error.class = "error";
+      error.innerText = "Error:\n" + e.name + "\n\n" +  e.message;
+      global.document.head.appendChild(error);
     }
-  });
+
+  try {
+    Load(resources, {
+      success: function (resources) {
+        Goya.init()
+      },
+      failure: failure
+    });
+  } catch (e) {
+    failure(e);
+  }
 }(this));
 
   </script>
